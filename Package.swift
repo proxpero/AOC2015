@@ -6,23 +6,42 @@ import PackageDescription
 let package = Package(
     name: "AOC2015",
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "AOC2015",
-            targets: ["AOC2015"]),
+            name: "Core",
+            targets: ["Core"]
+        ),
+        .executable(
+            name: "CLI",
+            targets: ["CLI"]
+        )
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(url: "https://github.com/apple/swift-algorithms", from: "0.0.1"),
+        .package(url: "https://github.com/proxpero/Parser.git", from: "0.0.1"),
+        .package(url: "https://github.com/proxpero/AOC.git", .branch("master")),
+        .package(url: "https://github.com/JohnSundell/Files.git", from: "4.2.0")
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
-            name: "AOC2015",
-            dependencies: []),
+            name: "CLI",
+            dependencies: [
+                "Core", "Files"
+            ]
+        ),
+        .target(
+            name: "Core",
+            dependencies: [
+                .product(name: "Algorithms", package: "swift-algorithms"),
+                "Parser",
+                "AOC"
+            ],
+            resources: [
+                .process("Input")
+            ]
+        ),
         .testTarget(
-            name: "AOC2015Tests",
-            dependencies: ["AOC2015"]),
+            name: "CoreTests",
+            dependencies: ["Core"]
+        ),
     ]
 )
